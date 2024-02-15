@@ -7,8 +7,86 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class MainViewController: BaseViewController {
+
+    enum ReminderList: Int, CaseIterable {
+        case today
+        case plan
+        case total
+        case flag
+        case done
+        
+        var categoryTitle: String {
+            switch self {
+            case .today:
+                return "오늘"
+            case .plan:
+                return "예정"
+            case .total:
+                return "전체"
+            case .flag:
+                return "깃발"
+            case .done:
+                return "완료됨"
+            }
+        }
+        
+        var categoryIcon: String {
+            switch self {
+            case .today:
+                return "calendar.circle.fill"
+            case .plan:
+                return "calendar.circle"
+            case .total:
+                return "tray.circle"
+            case .flag:
+                return "flag.circle.fill"
+            case .done:
+                return "checkmark.circle.fill"
+            }
+        }
+        
+        var iconColor: UIColor {
+            switch self {
+            case .today:
+                return .systemBlue
+            case .plan:
+                return .systemRed
+            case .total:
+                return .black
+            case .flag:
+                return .systemOrange
+            case .done:
+                return .systemGray2
+            }
+        }
+    }
+    
+    var totalReminder: Results<ReminderTable>!
+    
+    let totalLabel = {
+        let view = UILabel()
+        view.font = .boldSystemFont(ofSize: 28)
+        view.text = "전체"
+        return view
+    }()
+
+    lazy var mainCollectionView = {
+        let view = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: MainViewController.configureCollectionViewLayout()
+        )
+        view.backgroundColor = .clear
+        view.register(
+            MainCollectionViewCell.self,
+            forCellWithReuseIdentifier: "MainCollectionViewCell"
+        )
+        view.delegate = self
+        view.dataSource = self
+        return view
+    }()
 
     let toolbar = UIToolbar()
 
@@ -18,17 +96,41 @@ class MainViewController: BaseViewController {
         designToolbar()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let realm = try! Realm()
+        totalReminder = realm.objects(ReminderTable.self)
+        
+    }
+    
     override func configureHierarchy() {
+        view.addSubview(totalLabel)
+        view.addSubview(mainCollectionView)
         view.addSubview(toolbar)
     }
 
     override func configureView() {
         super.configureView()
-        toolbar.barTintColor = .white
-        toolbar.clipsToBounds = true
+        
+        view.backgroundColor = .white.withAlphaComponent(0.9)
+        setRightBarButton()
+        toolbar.backgroundColor = .white.withAlphaComponent(0.9)
+        toolbar.barTintColor = .white.withAlphaComponent(0.9)
+        toolbar.clipsToBounds = false
     }
     
     override func configureConstraints() {
+        totalLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(12)
+            make.horizontalEdges.equalToSuperview().inset(24)
+            make.height.equalTo(24)
+        }
+        mainCollectionView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
+            make.top.equalTo(totalLabel.snp.bottom).offset(12)
+            make.bottom.equalTo(-80)
+        }
         toolbar.snp.makeConstraints { make in
             make.height.equalTo(40)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -78,6 +180,59 @@ class MainViewController: BaseViewController {
         let vc = TodoViewController()
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
+    }
+
+    static func configureCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        let width = (UIScreen.main.bounds.width - 60) / 2
+        layout.itemSize = CGSize(
+            width: width,
+            height: width * 0.5
+        )
+        layout.minimumLineSpacing = 20
+        layout.minimumInteritemSpacing = 20
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+        layout.scrollDirection = .vertical
+        return layout
+    }
+
+    func setRightBarButton() {
+        let rightButton = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(sortButtonClicked)
+        )
+        
+        navigationItem.rightBarButtonItem = rightButton
+    }
+    
+    @objc func sortButtonClicked() {
+        
+    }
+}
+
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(ReminderList.allCases[0])
+        print(ReminderList.allCases[0].iconColor)
+        return ReminderList.allCases.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "MainCollectionViewCell", 
+            for: indexPath
+        ) as! MainCollectionViewCell
+        let target = ReminderList.allCases[indexPath.row]
+        cell.iconImage.image = UIImage(systemName: target.categoryIcon)
+        cell.iconImage.tintColor = target.iconColor
+        cell.countLabel.text = "0"
+        if indexPath.row == 2 {
+            cell.countLabel.text = "\(totalReminder.count)"
+        }  // set 만들기
+        cell.categoryLabel.text = target.categoryTitle
+        return cell
     }
 
 }

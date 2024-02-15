@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class TodoViewController: BaseViewController {
 
@@ -20,8 +21,20 @@ class TodoViewController: BaseViewController {
         }
     }
     
+    var userDataTitle: String?
+    var userDataMemo: String?
+    var userDataExpireDate: String?
+    var userDataTag: String?
+    var userDataPriority: Int?
+    
+    
+    
     lazy var todoTableView = {
         let view = UITableView(frame: .zero, style: .insetGrouped)
+        view.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: "todoCell"
+        )
         view.backgroundColor = .clear
         view.rowHeight = 40
         view.delegate = self
@@ -42,6 +55,7 @@ class TodoViewController: BaseViewController {
     override func configureView() {
         super.configureView()
         
+        setRightBarButton()
         navigationItem.title = "새로운 미리알림"
 
         titleTextField.placeholder = "제목"
@@ -66,6 +80,41 @@ class TodoViewController: BaseViewController {
             make.horizontalEdges.bottom.equalToSuperview()
         }
     }
+    
+    @objc func rightBarButtonClicked() {
+        
+        userDataTitle = titleTextField.text
+        userDataMemo = memotextField.text
+
+        if let userDataTitle = userDataTitle {
+            
+            let realm = try! Realm()
+            print(realm.configuration.fileURL)
+            let data = ReminderTable(
+                title: userDataTitle,
+                memo: userDataMemo,
+                expireDate: userDataExpireDate,
+                tag: userDataTag,
+                priority: userDataPriority
+            )
+            
+            try! realm.write {
+                realm.add(data)
+            }
+        }
+    }
+    
+    func setRightBarButton() {
+        let rightButton = UIBarButtonItem(
+            title: "추가",
+            style: .plain,
+            target: self,
+            action: #selector(rightBarButtonClicked)
+        )
+
+        navigationItem.rightBarButtonItem = rightButton
+    }
+
 }
 
 extension TodoViewController: UITableViewDelegate, UITableViewDataSource {
@@ -96,13 +145,16 @@ extension TodoViewController: UITableViewDelegate, UITableViewDataSource {
         if curIdx == 0 {
             let vc = EndDateViewController()
             vc.dateCallBack = { date in
+                // callback 인자 두 개 받는 법?
                 self.detailTextList[indexPath.section] = date
+                self.userDataExpireDate = date
             }
             navigationController?.pushViewController(vc, animated: true)
         } else if curIdx == 1 {
             let vc = AddTagViewController()
             vc.tagCallBack = { tag in
                 self.detailTextList[indexPath.section] = tag
+                self.userDataTag = tag
             }
             navigationController?.pushViewController(vc, animated: true)
         } else if curIdx == 2 {

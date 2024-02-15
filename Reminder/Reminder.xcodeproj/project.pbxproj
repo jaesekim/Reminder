@@ -23,6 +23,10 @@
 		7B0C37802B7D02E700A92A6B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 7B0C377F2B7D02E700A92A6B /* Kingfisher */; };
 		7B0C37832B7D02F100A92A6B /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7B0C37822B7D02F100A92A6B /* SnapKit */; };
 		7B0C37862B7D02FA00A92A6B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7B0C37852B7D02FA00A92A6B /* Alamofire */; };
+		7B5ACCE52B7E9EEE00825C15 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5ACCE42B7E9EEE00825C15 /* Realm */; };
+		7B5ACCE72B7E9EEE00825C15 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5ACCE62B7E9EEE00825C15 /* RealmSwift */; };
+		7B5ACCE92B7EA60B00825C15 /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCE82B7EA60B00825C15 /* MainCollectionViewCell.swift */; };
+		7B5ACCEC2B7EBD0600825C15 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCEB2B7EBD0600825C15 /* RealmModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +45,8 @@
 		7B0C37782B7CEECA00A92A6B /* PriorityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityViewController.swift; sourceTree = "<group>"; };
 		7B0C377A2B7CEEE800A92A6B /* AddImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddImageViewController.swift; sourceTree = "<group>"; };
 		7B0C377C2B7CEEF100A92A6B /* AddTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTagViewController.swift; sourceTree = "<group>"; };
+		7B5ACCE82B7EA60B00825C15 /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B5ACCEB2B7EBD0600825C15 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +56,8 @@
 			files = (
 				7B0C37862B7D02FA00A92A6B /* Alamofire in Frameworks */,
 				7B0C37802B7D02E700A92A6B /* Kingfisher in Frameworks */,
+				7B5ACCE52B7E9EEE00825C15 /* Realm in Frameworks */,
+				7B5ACCE72B7E9EEE00825C15 /* RealmSwift in Frameworks */,
 				7B0C37832B7D02F100A92A6B /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,6 +84,7 @@
 		7B0C37542B7CEC4000A92A6B /* Reminder */ = {
 			isa = PBXGroup;
 			children = (
+				7B5ACCEA2B7EBCF300825C15 /* Realm */,
 				7B0C37732B7CEDDA00A92A6B /* Todo */,
 				7B0C376A2B7CED4500A92A6B /* Main */,
 				7B0C37692B7CED3C00A92A6B /* Base */,
@@ -102,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				7B0C376F2B7CED8C00A92A6B /* MainViewController.swift */,
+				7B5ACCE82B7EA60B00825C15 /* MainCollectionViewCell.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -116,6 +126,14 @@
 				7B0C377C2B7CEEF100A92A6B /* AddTagViewController.swift */,
 			);
 			path = Todo;
+			sourceTree = "<group>";
+		};
+		7B5ACCEA2B7EBCF300825C15 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				7B5ACCEB2B7EBD0600825C15 /* RealmModel.swift */,
+			);
+			path = Realm;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,6 +156,8 @@
 				7B0C377F2B7D02E700A92A6B /* Kingfisher */,
 				7B0C37822B7D02F100A92A6B /* SnapKit */,
 				7B0C37852B7D02FA00A92A6B /* Alamofire */,
+				7B5ACCE42B7E9EEE00825C15 /* Realm */,
+				7B5ACCE62B7E9EEE00825C15 /* RealmSwift */,
 			);
 			productName = Reminder;
 			productReference = 7B0C37522B7CEC4000A92A6B /* Reminder.app */;
@@ -171,6 +191,7 @@
 				7B0C377E2B7D02E700A92A6B /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				7B0C37812B7D02F100A92A6B /* XCRemoteSwiftPackageReference "SnapKit" */,
 				7B0C37842B7D02FA00A92A6B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				7B5ACCE32B7E9EEE00825C15 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 7B0C37532B7CEC4000A92A6B /* Products */;
 			projectDirPath = "";
@@ -200,12 +221,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B0C37792B7CEECA00A92A6B /* PriorityViewController.swift in Sources */,
+				7B5ACCEC2B7EBD0600825C15 /* RealmModel.swift in Sources */,
 				7B0C377D2B7CEEF100A92A6B /* AddTagViewController.swift in Sources */,
 				7B0C375A2B7CEC4000A92A6B /* ViewController.swift in Sources */,
 				7B0C377B2B7CEEE800A92A6B /* AddImageViewController.swift in Sources */,
 				7B0C376D2B7CED7100A92A6B /* BaseViewController.swift in Sources */,
 				7B0C37562B7CEC4000A92A6B /* AppDelegate.swift in Sources */,
 				7B0C37582B7CEC4000A92A6B /* SceneDelegate.swift in Sources */,
+				7B5ACCE92B7EA60B00825C15 /* MainCollectionViewCell.swift in Sources */,
 				7B0C37752B7CEDE600A92A6B /* TodoViewController.swift in Sources */,
 				7B0C37702B7CED8C00A92A6B /* MainViewController.swift in Sources */,
 				7B0C37772B7CEEBF00A92A6B /* EndDateViewController.swift in Sources */,
@@ -455,6 +478,14 @@
 				minimumVersion = 5.8.1;
 			};
 		};
+		7B5ACCE32B7E9EEE00825C15 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -472,6 +503,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7B0C37842B7D02FA00A92A6B /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		7B5ACCE42B7E9EEE00825C15 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7B5ACCE32B7E9EEE00825C15 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		7B5ACCE62B7E9EEE00825C15 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7B5ACCE32B7E9EEE00825C15 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

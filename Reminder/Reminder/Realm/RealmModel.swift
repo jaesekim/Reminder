@@ -17,6 +17,7 @@ class ReminderTable: Object {
         self.expireDate = expireDate
         self.tag = tag
         self.priority = priority
+        self.done = false
     }
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var title: String
@@ -24,4 +25,5 @@ class ReminderTable: Object {
     @Persisted var expireDate: String?
     @Persisted var tag: String?
     @Persisted var priority: Int?
+    @Persisted var done: Bool
 }

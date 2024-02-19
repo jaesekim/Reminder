@@ -27,6 +27,9 @@
 		7B5ACCE72B7E9EEE00825C15 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5ACCE62B7E9EEE00825C15 /* RealmSwift */; };
 		7B5ACCE92B7EA60B00825C15 /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCE82B7EA60B00825C15 /* MainCollectionViewCell.swift */; };
 		7B5ACCEC2B7EBD0600825C15 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCEB2B7EBD0600825C15 /* RealmModel.swift */; };
+		7B5ACCF02B829CF900825C15 /* ReminderTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCEF2B829CF900825C15 /* ReminderTableRepository.swift */; };
+		7B5ACCF32B82A00400825C15 /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCF22B82A00400825C15 /* TodoListViewController.swift */; };
+		7B5ACCF52B82BFA200825C15 /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5ACCF42B82BFA200825C15 /* TodoListTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +50,9 @@
 		7B0C377C2B7CEEF100A92A6B /* AddTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTagViewController.swift; sourceTree = "<group>"; };
 		7B5ACCE82B7EA60B00825C15 /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B5ACCEB2B7EBD0600825C15 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		7B5ACCEF2B829CF900825C15 /* ReminderTableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderTableRepository.swift; sourceTree = "<group>"; };
+		7B5ACCF22B82A00400825C15 /* TodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; };
+		7B5ACCF42B82BFA200825C15 /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,7 @@
 		7B0C37542B7CEC4000A92A6B /* Reminder */ = {
 			isa = PBXGroup;
 			children = (
+				7B5ACCF12B829FB900825C15 /* TodoList */,
 				7B5ACCEA2B7EBCF300825C15 /* Realm */,
 				7B0C37732B7CEDDA00A92A6B /* Todo */,
 				7B0C376A2B7CED4500A92A6B /* Main */,
@@ -132,8 +139,18 @@
 			isa = PBXGroup;
 			children = (
 				7B5ACCEB2B7EBD0600825C15 /* RealmModel.swift */,
+				7B5ACCEF2B829CF900825C15 /* ReminderTableRepository.swift */,
 			);
 			path = Realm;
+			sourceTree = "<group>";
+		};
+		7B5ACCF12B829FB900825C15 /* TodoList */ = {
+			isa = PBXGroup;
+			children = (
+				7B5ACCF22B82A00400825C15 /* TodoListViewController.swift */,
+				7B5ACCF42B82BFA200825C15 /* TodoListTableViewCell.swift */,
+			);
+			path = TodoList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,9 +245,12 @@
 				7B0C376D2B7CED7100A92A6B /* BaseViewController.swift in Sources */,
 				7B0C37562B7CEC4000A92A6B /* AppDelegate.swift in Sources */,
 				7B0C37582B7CEC4000A92A6B /* SceneDelegate.swift in Sources */,
+				7B5ACCF52B82BFA200825C15 /* TodoListTableViewCell.swift in Sources */,
+				7B5ACCF32B82A00400825C15 /* TodoListViewController.swift in Sources */,
 				7B5ACCE92B7EA60B00825C15 /* MainCollectionViewCell.swift in Sources */,
 				7B0C37752B7CEDE600A92A6B /* TodoViewController.swift in Sources */,
 				7B0C37702B7CED8C00A92A6B /* MainViewController.swift in Sources */,
+				7B5ACCF02B829CF900825C15 /* ReminderTableRepository.swift in Sources */,
 				7B0C37772B7CEEBF00A92A6B /* EndDateViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

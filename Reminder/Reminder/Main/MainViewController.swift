@@ -64,7 +64,11 @@ class MainViewController: BaseViewController {
         }
     }
     
-    var totalReminder: Results<ReminderTable>!
+    var totalReminder: Results<ReminderTable>! {
+        didSet {
+            mainCollectionView.reloadData()
+        }
+    }
     
     let totalLabel = {
         let view = UILabel()
@@ -88,11 +92,19 @@ class MainViewController: BaseViewController {
         return view
     }()
 
+    var doneCount = 0
     let toolbar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(todoCountReceivedNotificationObserver),
+            name: NSNotification.Name("todoCountReceived"),
+            object: nil
+        )
+        
         designToolbar()
     }
     
@@ -104,6 +116,14 @@ class MainViewController: BaseViewController {
         
     }
     
+    @objc func todoCountReceivedNotificationObserver(
+        notification: NSNotification
+    ) {
+        if let value = notification.userInfo?["count"] as? Int {
+            print(value)
+            doneCount = value
+        }
+    }
     override func configureHierarchy() {
         view.addSubview(totalLabel)
         view.addSubview(mainCollectionView)
@@ -214,12 +234,12 @@ class MainViewController: BaseViewController {
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(ReminderList.allCases[0])
-        print(ReminderList.allCases[0].iconColor)
+
         return ReminderList.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "MainCollectionViewCell", 
             for: indexPath
@@ -230,9 +250,24 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.countLabel.text = "0"
         if indexPath.row == 2 {
             cell.countLabel.text = "\(totalReminder.count)"
-        }  // set 만들기
+            // set 만들기
+        } else if indexPath.row == 4 {
+            cell.countLabel.text = "\(doneCount)"
+        }
         cell.categoryLabel.text = target.categoryTitle
         return cell
+    }
+    
+    // 눌렀을 때 다른 페이지로 넘어가게 만들기
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let currentIdx = indexPath.row
+        let vc = TodoListViewController()
+        if currentIdx == 2 {
+            
+            vc.menuTitleLabel.text = ReminderList.allCases[currentIdx].categoryTitle
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
 }

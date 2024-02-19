@@ -27,7 +27,7 @@ class TodoViewController: BaseViewController {
     var userDataTag: String?
     var userDataPriority: Int?
     
-    
+    let repository = ReminderTableRepository()
     
     lazy var todoTableView = {
         let view = UITableView(frame: .zero, style: .insetGrouped)
@@ -88,8 +88,6 @@ class TodoViewController: BaseViewController {
 
         if let userDataTitle = userDataTitle {
             
-            let realm = try! Realm()
-            print(realm.configuration.fileURL)
             let data = ReminderTable(
                 title: userDataTitle,
                 memo: userDataMemo,
@@ -97,10 +95,8 @@ class TodoViewController: BaseViewController {
                 tag: userDataTag,
                 priority: userDataPriority
             )
-            
-            try! realm.write {
-                realm.add(data)
-            }
+            repository.createItem(data)
+            dismiss(animated: true)
         }
     }
     

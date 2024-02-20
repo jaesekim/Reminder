@@ -9,8 +9,13 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class MainViewController: BaseViewController {
+protocol sendDataDelegate {
+    func reloadGroupTableView()
+    func reloadTotalTodo()
+}
 
+class MainViewController: BaseViewController {
+    
     enum ReminderList: Int, CaseIterable {
         case today
         case plan
@@ -64,11 +69,19 @@ class MainViewController: BaseViewController {
         }
     }
     
+    var todoGroup: Results<TodoGroup>!
+    
     var totalReminder: Results<ReminderTable>! {
         didSet {
             mainCollectionView.reloadData()
         }
     }
+    
+    // 껍데기 TableView
+    lazy var outlineTableView = {
+        let view = UITableView()
+        return view
+    }()
     
     let totalLabel = {
         let view = UILabel()
@@ -91,16 +104,33 @@ class MainViewController: BaseViewController {
         view.dataSource = self
         return view
     }()
+    
+    lazy var groupTableView = {
+        let view = UITableView(
+            frame: .zero,
+            style: .insetGrouped
+        )
+        view.rowHeight = 40
+        view.backgroundColor = .clear
+        view.delegate = self
+        view.dataSource = self
+        view.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: "GroupTableViewCell"
+        )
+        return view
+    }()
 
     var doneCount = 0
-    let repository = ReminderTableRepository()
+    let repository = ReminderRepository()
     let toolbar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        totalReminder = repository.readItem()
-
+        totalReminder = repository.readItem(type: ReminderTable.self)
+        todoGroup = repository.readItem(type: TodoGroup.self)
+    
         for item in totalReminder {
             if item.done {
                 doneCount += 1
@@ -120,7 +150,9 @@ class MainViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        totalReminder = repository.readItem()
+        totalReminder = repository.readItem(type: ReminderTable.self)
+        todoGroup = repository.readItem(type: TodoGroup.self)
+        print(todoGroup)
     }
     
     @objc func todoCountReceivedNotificationObserver(
@@ -134,12 +166,12 @@ class MainViewController: BaseViewController {
     override func configureHierarchy() {
         view.addSubview(totalLabel)
         view.addSubview(mainCollectionView)
+        view.addSubview(groupTableView)
         view.addSubview(toolbar)
     }
 
     override func configureView() {
         super.configureView()
-        
 
         setRightBarButton()
 
@@ -165,7 +197,12 @@ class MainViewController: BaseViewController {
         mainCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
             make.top.equalTo(totalLabel.snp.bottom).offset(12)
-            make.bottom.equalTo(-80)
+            make.height.equalTo(UIScreen.main.bounds.width - 80)
+        }
+        groupTableView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
+            make.top.equalTo(mainCollectionView.snp.bottom).offset(4)
+            make.bottom.equalTo(toolbar.snp.top)
         }
         toolbar.snp.makeConstraints { make in
             make.height.equalTo(40)
@@ -201,7 +238,7 @@ class MainViewController: BaseViewController {
             title: "목록추가",
             style: .plain,
             target: self,
-            action: nil
+            action: #selector(newTodoGroupClicked)
         )
         
         items.append(toolbarItem1)
@@ -214,6 +251,14 @@ class MainViewController: BaseViewController {
     
     @objc func newTodoClicked() {
         let vc = TodoViewController()
+        vc.delegate = self
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
+    }
+    
+    @objc func newTodoGroupClicked() {
+        let vc = NewTodoGroupViewController()
+        vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
@@ -290,5 +335,59 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             navigationController?.pushViewController(vc, animated: true)
         }
     }
+}
 
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        return todoGroup.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: "GroupTableViewCell"
+        ) else { return UITableViewCell() }
+
+        let target = todoGroup[indexPath.row]
+        
+        cell.imageView?.image = UIImage(systemName: target.iconSystemName)
+        cell.textLabel?.text = target.groupTitle
+        cell.accessoryType = .disclosureIndicator
+        cell.selectionStyle = .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let vc = TodoListViewController()
+        vc.menuTitleLabel.text = todoGroup[indexPath.row].groupTitle
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // Allow Sliding
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            repository.deleteItem(todoGroup[indexPath.row])
+            groupTableView.reloadData()
+        }
+    }
+}
+
+
+extension MainViewController: sendDataDelegate {
+    func reloadGroupTableView() {
+        todoGroup = repository.readItem(type: TodoGroup.self)
+        groupTableView.reloadData()
+    }
+    
+    func reloadTotalTodo() {
+        totalReminder = repository.readItem(type: ReminderTable.self)
+        mainCollectionView.reloadData()
+    }
 }

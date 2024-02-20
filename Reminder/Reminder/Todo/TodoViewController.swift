@@ -81,8 +81,10 @@ class TodoViewController: BaseViewController {
     var userDataTag: String?
     var userDataPriority: Int?
     
-    let repository = ReminderTableRepository()
+    let repository = ReminderRepository()
     
+    var delegate: sendDataDelegate?
+
     var addDoneCount: (() -> Void)?
     
     override func viewDidLoad() {
@@ -111,8 +113,7 @@ class TodoViewController: BaseViewController {
     override func configureConstraints() {
         todoTableView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
-            make.horizontalEdges.equalToSuperview()
-            make.height.equalTo(360)
+            make.horizontalEdges.bottom.equalToSuperview()
         }
     }
     
@@ -128,7 +129,10 @@ class TodoViewController: BaseViewController {
                 tag: userDataTag,
                 priority: userDataPriority
             )
+
             repository.createItem(data)
+            delegate?.reloadTotalTodo()
+
             dismiss(animated: true)
         } else {
             showToast("제목을 입력해 주세요")

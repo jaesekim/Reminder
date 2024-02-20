@@ -1,16 +1,16 @@
 //
-//  TodoListViewController.swift
+//  GroupDetailViewController.swift
 //  Reminder
 //
-//  Created by 김재석 on 2/17/24.
+//  Created by 김재석 on 2/20/24.
 //
 
 import UIKit
 import SnapKit
 import RealmSwift
 
-class TodoListViewController: BaseViewController {
-    
+class GroupDetailViewController: BaseViewController {
+
     let menuTitleLabel = {
         let view = UILabel()
         view.font = .boldSystemFont(ofSize: 28)
@@ -42,18 +42,13 @@ class TodoListViewController: BaseViewController {
         view.delegate = self
         view.dataSource = self
         view.backgroundColor = .clear
-        view.register(
-            TodoListTableViewCell.self,
-            forCellReuseIdentifier: "TodoListTableViewCell"
-        )
+        
         return view
     }()
     
-    var todoList: Results<ReminderTable>! {
-        didSet {
-            todoListTableView.reloadData()
-        }
-    }
+    var main: TodoGroup!
+    
+    var todoList: Results<ReminderTable>!
 
     var todoCount = 0
 
@@ -154,54 +149,17 @@ class TodoListViewController: BaseViewController {
         todoCount = 0
         todoCountLabel.text = "0개 완료됨"
     }
-    
-
 }
 
-extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
+extension GroupDetailViewController: UITableViewDelegate, UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return todoList.count
+        <#code#>
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: "TodoListTableViewCell",
-            for: indexPath
-        ) as! TodoListTableViewCell
-
-        let target = todoList[indexPath.row]
-
-        if target.done {
-            cell.doneButton.setImage(UIImage(systemName: "button.programmable"), for: .normal)
-        } else {
-            cell.doneButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        }
-
-        cell.doneButtonCallBack = {
-            // 이미 완료 버튼 눌려있는데 클릭 -> 완료 취소
-            if target.done {
-                self.repository.updateDone(self.todoList[indexPath.row])
-                cell.doneButton.setImage(UIImage(systemName: "button.programmable"), for: .normal)
-            } else {
-                self.repository.updateDone(self.todoList[indexPath.row])
-                cell.doneButton.setImage(UIImage(systemName: "circle"), for: .normal)
-            }
-            self.todoListTableView.reloadData()
-            self.todoCount = 0
-            for item in self.todoList {
-                if item.done {
-                    self.todoCount += 1
-                }
-            }
-            self.todoCountLabel.text = "\(self.todoCount)개 완료됨"
-        }
-        cell.titleLabel.text = target.title
-        cell.memoLabel.text = target.memo ?? ""
-        
-        cell.selectionStyle = .none
-        
-        return cell
+        <#code#>
     }
-
+    
+    
 }

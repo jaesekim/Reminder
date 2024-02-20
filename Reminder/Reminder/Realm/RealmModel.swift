@@ -8,6 +8,28 @@
 import Foundation
 import RealmSwift
 
+class TodoGroup: Object {
+    
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var groupTitle: String
+    @Persisted var iconSystemName: String
+    @Persisted var regDate: Date
+    
+    // 1:N
+    @Persisted var detail: List<ReminderTable>
+    
+    convenience init(
+        groupTitle: String,
+        iconSystemName: String,
+        regDate: Date
+    ) {
+        self.init()
+        self.groupTitle = groupTitle
+        self.iconSystemName = iconSystemName
+        self.regDate = regDate
+    }
+}
+
 class ReminderTable: Object {
     
     convenience init(title: String, memo: String? = nil, createDate: Date, expireDate: String? = nil, tag: String? = nil, priority: Int? = nil) {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Toast
 
 class BaseViewController: UIViewController {
 
@@ -22,11 +23,15 @@ class BaseViewController: UIViewController {
     }
 
     func configureView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray5
         print(#function)
     }
 
     func configureConstraints() {
         print(#function)
+    }
+    
+    func showToast(_ message: String) {
+        view.makeToast(message)
     }
 }

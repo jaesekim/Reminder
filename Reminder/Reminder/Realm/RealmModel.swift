@@ -10,10 +10,11 @@ import RealmSwift
 
 class ReminderTable: Object {
     
-    convenience init(title: String, memo: String? = nil, expireDate: String? = nil, tag: String? = nil, priority: Int? = nil) {
+    convenience init(title: String, memo: String? = nil, createDate: Date, expireDate: String? = nil, tag: String? = nil, priority: Int? = nil) {
         self.init()
         self.title = title
         self.memo = memo
+        self.createDate = createDate
         self.expireDate = expireDate
         self.tag = tag
         self.priority = priority
@@ -22,6 +23,7 @@ class ReminderTable: Object {
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var title: String
     @Persisted var memo: String?
+    @Persisted var createDate: Date
     @Persisted var expireDate: String?
     @Persisted var tag: String?
     @Persisted var priority: Int?

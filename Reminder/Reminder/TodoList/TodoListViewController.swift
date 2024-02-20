@@ -82,6 +82,7 @@ class TodoListViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        print("todolist:", todoCount)
         // post
         NotificationCenter.default.post(
             name: NSNotification.Name("todoCountReceived"),
@@ -176,6 +177,7 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.doneButton.setImage(UIImage(systemName: "circle"), for: .normal)
         }
+
         cell.doneButtonCallBack = {
             // 이미 완료 버튼 눌려있는데 클릭 -> 완료 취소
             if target.done {
@@ -196,6 +198,8 @@ extension TodoListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         cell.titleLabel.text = target.title
         cell.memoLabel.text = target.memo ?? ""
+        
+        cell.selectionStyle = .none
         
         return cell
     }

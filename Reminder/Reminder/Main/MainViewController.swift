@@ -93,10 +93,19 @@ class MainViewController: BaseViewController {
     }()
 
     var doneCount = 0
+    let repository = ReminderTableRepository()
     let toolbar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        totalReminder = repository.readItem()
+
+        for item in totalReminder {
+            if item.done {
+                doneCount += 1
+            }
+        }
 
         NotificationCenter.default.addObserver(
             self,
@@ -104,16 +113,14 @@ class MainViewController: BaseViewController {
             name: NSNotification.Name("todoCountReceived"),
             object: nil
         )
-        
+
         designToolbar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let realm = try! Realm()
-        totalReminder = realm.objects(ReminderTable.self)
-        
+        totalReminder = repository.readItem()
     }
     
     @objc func todoCountReceivedNotificationObserver(
@@ -133,8 +140,17 @@ class MainViewController: BaseViewController {
     override func configureView() {
         super.configureView()
         
-        view.backgroundColor = .white.withAlphaComponent(0.9)
+
         setRightBarButton()
+
+        let backBarButtonItem = UIBarButtonItem(
+            title: "목록",
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        navigationItem.backBarButtonItem = backBarButtonItem
+
         toolbar.backgroundColor = .white.withAlphaComponent(0.9)
         toolbar.barTintColor = .white.withAlphaComponent(0.9)
         toolbar.clipsToBounds = false
@@ -244,10 +260,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             withReuseIdentifier: "MainCollectionViewCell", 
             for: indexPath
         ) as! MainCollectionViewCell
+
         let target = ReminderList.allCases[indexPath.row]
+
         cell.iconImage.image = UIImage(systemName: target.categoryIcon)
         cell.iconImage.tintColor = target.iconColor
         cell.countLabel.text = "0"
+
         if indexPath.row == 2 {
             cell.countLabel.text = "\(totalReminder.count)"
             // set 만들기
@@ -255,6 +274,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             cell.countLabel.text = "\(doneCount)"
         }
         cell.categoryLabel.text = target.categoryTitle
+
         return cell
     }
     
@@ -263,6 +283,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         let currentIdx = indexPath.row
         let vc = TodoListViewController()
+    
         if currentIdx == 2 {
             
             vc.menuTitleLabel.text = ReminderList.allCases[currentIdx].categoryTitle
